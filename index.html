@@ -1,191 +1,468 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>简约导航</title>
-	<meta name="viewport"
-		content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
-	<meta content="telephone=no,email=no" name="format-detection">
-	<meta content="yes" name="apple-mobile-web-app-capable">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<meta name="apple-touch-fullscreen" content="yes" />
-	<meta name="keywords" content="网址导航" />
-	<meta name="description" content="一个简单美观可自定义的网址导航" />
-	<link rel="shortcut icon" href="favicon.ico">
-	<!-- 注意！为了优化演示站访问速度下方两行引用的是CDN上的CSS文件地址，请修改为自己的样式文件地址 -->
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/appexplore/jianavi/css/style.min.css" />
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/appexplore/jianavi/css/yidong.min.css" />
-	<!-- 本项目开源地址：https://github.com/appexplore/jianavi 请勿完全抄袭源码，请勿声明自己是原创 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
-
 <body>
+    <style>
+        ul,li{
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .tab{
+            width: 1024px;
+            margin: 0 auto;
+            padding-bottom: 19px;
 
-	<!-- 搜索栏start -->
-	<?php
-echo"dad"?>
-	<div class="baidu baidu-2">
-		<form name="f" action="https://www.baidu.com/s" target="_blank">
-			<div class="Select-box-2" id="baidu">
-				<ul>
-					<li class="this_s">百 度</li>
-					<li class="miji_s">多 吉</li>
-					<li class="bing_s">必 应</li>
-					<li class="google_s">谷 歌</li>
-					<li class="baidu_s">百 度</li>
-				</ul>
-			</div>
-			<div class="in5">
-				<input name="wd" id="kw-2" maxlength="100" autocomplete="off" type="text">
-				<div class="qingkong" id="qingkong" title="清空">x</div>
-			</div>
-			<input value="搜 索" id="su-2" type="submit">
-		</form>
-		<ul class="keylist"></ul>
-	</div>
-	<!-- 搜索栏end -->
+            align-items: center;
+            flex-direction: row;
+            justify-content: space-between;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .lists{
+            display: flex;
+            width: 100%;
+            text-align: center;
+        }
+        .lists li{
+            width: 60px;
+            background-color:whitesmoke;
+            margin-right: 100px;
+            margin-left: 100px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .one{
+            display: block;
+        }
+        .content{
+            position: relative;
+        }
+        .item{
+            width: 100%;
+            height: auto;
+            /*border: 1px solid #ccc;*/
+            position: absolute;
+            display: none;
+            font-size: 14px;
+            text-indent: 8px;
+            padding: 10px;
+            /*background-color:blueviolet;*/
+        }
+        .lists .active{
+            background-color: lightgrey;
+        }
+        table{
+            align-content:center;
+            width: 100%;
+        }
+        a{
+            text-decoration:none;
+            color: black;
+            text-align: center;
+        }
+        td{
+            text-align: center;
+            margin: 5px;
+            padding-left: 40px;
+            padding-top: 20px;
+        }
+        #search{
+            padding-bottom: 30px;
+        }
+        #search ul {
+            list-style-type: none;
+            display: block;
+            width: 100px;
+            height: 33px;
+            margin: 0;
+            padding: 0;
+            border: 0px;
+            float: left;
+        }
+        #search li {
+            border: 0px;
+            margin: 0px;
+            padding: 0px;
+        }
+        #search .selected {
+            display: block;
+        }
+        #search form {
+            margin: 0px;
+            padding: 0px;
+        }
+        #search input {
+            height: 30px;
+            width: 400px;
+            margin: 0px;
+        }
+        #search .button {
+            font-size: 17px;
+            font-weight: 600;
+            color: #002D96;
+            height: 30px;
+            width: 110px;
+            margin-left: 50px;
+            background: #e6efc2;
+            opacity: 0.8;
+            border: #7fb80e 1px solid;
+            cursor: pointer;
+            -webkit-border-radius: 2px;
+            border-radius: 2px;
+        }
+    </style>
+    <div id="search" align="center">
+        <table>
+            <tr>
+                <td>
+                    <ul>
+                        <li style="display:block;"><img width="80" src="https://www.baidu.com/img/bd_logo1.png"/></li>
+                        <li style="display:none;"><img width="80" src="https://www.google.com.hk/images/branding/googlelogo/2x/googlelogo_color_120x44dp.png"/></li>
+                        <li style="display:none;"><img width="80" src="https://www.sogou.com/web/index/images/loading.gif"/></li>
+                    </ul>
+                </td>
+                <td id="from_box" style="padding-left:10px;">
+                    <form id="from_baidu" style="display:block" action="http://www.baidu.com/baidu" target="_blank" method="get">
+                        <input name="" type="hidden" value="baidu"/>
+                        <input type="text" name="word"/>
+                        <input class="button" type="submit" value="百度一下" onMouseOver="this.style.opacity='1'" onMouseOut="this.style.opacity='0.7'"/>
+                    </form>
+                    <form id="from_google" style="display:none" action="http://www.google.com/search" target="_blank" method="get">
+                        <input type="text" name="q"/>
+                        <input class="button" type="submit" value="google搜索" onMouseOver="this.style.opacity='1'" onMouseOut="this.style.opacity='0.7'"/>
+                    </form>
+                    <form id="from_so" style="display:none" action="http://www.google.com/search" target="_blank" method="get">
+                        <input type="text" name="qu"/>
+                        <input class="button" type="submit" value="so" onMouseOver="this.style.opacity='1'" onMouseOut="this.style.opacity='0.7'"/>
+                    </form>
+<!--                    <form id="from_sougou" style="display:none" action="http://www.sogou.com/web" target="_blank" method="get">-->
+<!--                        <input type="text" name="query">-->
+<!--                        <input class="button" type="submit" value="sougou搜索" onMouseOver="this.style.opacity='1'" onMouseOut="this.style.opacity='0.7'"/>-->
+<!--                    </form>-->
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="tab">
+        <ul class="lists">
+            <li class="active">常用</li>
+            <li>娱乐</li>
+            <li>学习</li>
+            <li>技术</li>
 
-	<!-- 内容start -->
-	<div class="body">
-		<div class="content">
-			<div class="jianjie">
-				<div class="jj-list">
-					<div class="jj-list-tit">学习 · 生活</div>
-					<ul class="jj-list-con">
-						<li><a href="https://www.taobao.com/" class="link-3" target="_blank" rel="nofollow">淘宝</a></li>
-						<li><a href="https://www.jd.com/" class="link-3" target="_blank" rel="nofollow">京东</a></li>
-						<li><a href="http://123.sogou.com/shwz/yinhang.html" class="link-3" target="_blank"
-								rel="nofollow">银行</a></li>
-						<li><a href="https://www.amap.com/" class="link-3" target="_blank" rel="nofollow">地图</a></li>
-						<li><a href="https://translate.google.cn/" class="link-3" target="_blank" rel="nofollow">翻译</a>
-						</li>
-						<li><a href="https://hao.qq.com/qita/youxiang.html" class="link-3" target="_blank"
-								rel="nofollow">邮箱</a></li>
-						<li><a href="https://www.runoob.com/" class="link-3" target="_blank" rel="nofollow">菜鸟教程</a>
-						</li>
-						<li><a href="https://study.163.com/" class="link-3" target="_blank" rel="nofollow">云课堂</a></li>
-						<li><a href="https://www.icourse163.org/" class="link-3" target="_blank" rel="nofollow">MOOC</a>
-						</li>
-					</ul>
-				</div>
-				<div class="jj-list">
-					<div class="jj-list-tit">常用 · 社区</div>
-					<ul class="jj-list-con">
-						<li><a href="https://wx.qq.com/" class="link-3" target="_blank" rel="nofollow">微信</a></li>
-						<li><a href="https://weibo.com/" class="link-3" target="_blank" rel="nofollow">微博</a></li>
-						<li><a href="https://www.zhihu.com/" class="link-3" target="_blank" rel="nofollow">知乎</a></li>
-						<li><a href="https://tieba.baidu.com/" class="link-3" target="_blank" rel="nofollow">贴吧</a></li>
-						<li><a href="http://www.soomal.com/" class="link-3" target="_blank" rel="nofollow">Soomal</a>
-						</li>
-						<li><a href="https://topbook.cc/overview" class="link-3" target="_blank"
-								rel="nofollow">Topbook</a></li>
-						<li><a href="https://github.com/" class="link-3" target="_blank" rel="nofollow">GitHub</a></li>
-						<li><a href="https://www.douban.com/" class="link-3" target="_blank" rel="nofollow">豆瓣</a></li>
-						<li><a href="https://www.v2ex.com/" class="link-3" target="_blank" rel="nofollow">V2EX</a></li>
-					</ul>
-				</div>
-				<div class="jj-list">
-					<div class="jj-list-tit">影音 · 娱乐</div>
-					<ul class="jj-list-con">
-						<li><a href="https://www.iqiyi.com/" class="link-3" target="_blank" rel="nofollow">爱奇艺</a></li>
-						<li><a href="https://v.qq.com/" class="link-3" target="_blank" rel="nofollow">腾讯视频</a></li>
-						<li><a href="https://www.bilibili.com/" class="link-3" target="_blank" rel="nofollow">哔哩哔哩</a>
-						</li>
-						<li><a href="https://www.mgtv.com/" class="link-3" target="_blank" rel="nofollow">芒果TV</a></li>
-						<li><a href="https://www.youku.com/" class="link-3" target="_blank" rel="nofollow">优酷</a></li>
-						<li><a href="https://music.163.com/" class="link-3" target="_blank" rel="nofollow">音乐</a></li>
-						<li><a href="https://dianying.fm/" class="link-3" target="_blank" rel="nofollow">电影FM</a></li>
-						<li><a href="https://www.dikotv.com/" class="link-3" target="_blank" rel="nofollow">顶空影视</a>
-						</li>
-						<li><a href="http://www.zzzfun.com/" class="link-3" target="_blank" rel="nofollow">ZzzFun</a>
-						</li>
-					</ul>
-				</div>
-				<div class="jj-list">
-					<div class="jj-list-tit">发现 · 世界</div>
-					<ul class="jj-list-con">
-						<li><a href="https://news.ifeng.com/" class="link-3" target="_blank" rel="nofollow">凤凰资讯</a>
-						</li>
-						<li><a href="https://ef.zhiweidata.com/#!/index" class="link-3" target="_blank"
-								rel="nofollow">知微事见</a></li>
-						<li><a href="https://sspai.com/" class="link-3" target="_blank" rel="nofollow">少数派</a></li>
-						<li><a href="https://jikipedia.com/" class="link-3" target="_blank" rel="nofollow">小鸡词典</a></li>
-						<li><a href="https://jandan.net/" class="link-3" target="_blank" rel="nofollow">煎蛋</a></li>
-						<li><a href="https://youquhome.com/" class="link-3" target="_blank" rel="nofollow">有趣网址</a></li>
-						<li><a href="https://zhuxiao.wiki/" class="link-3" target="_blank" rel="nofollow">注销指南</a>
-						</li>
-						<li><a href="https://houxu.app/" class="link-3" target="_blank" rel="nofollow">后续</a></li>
-						<li><a href="https://ac.scmor.com/" class="link-3" target="_blank" rel="nofollow">思谋学术</a></li>
-					</ul>
-				</div>
-				<div class="jj-list">
-					<div class="jj-list-tit">在线 · 工具</div>
-					<ul class="jj-list-con">
-						<li><a href="https://www.photopea.com/" class="link-3" target="_blank"
-								rel="nofollow">在线修图</a></li>
-						<li><a href="https://cowtransfer.com/" class="link-3" target="_blank" rel="nofollow">收发文件</a>
-						</li>
-						<li><a href="https://cli.im/" class="link-3" target="_blank" rel="nofollow">二维码</a></li>
-						<li><a href="https://www.linshiyouxiang.net" class="link-3" target="_blank"
-								rel="nofollow">临时邮箱</a></li>
-						<li><a href="https://www.materialtools.com/" class="link-3" target="_blank"
-								rel="nofollow">临时短信</a></li>
-						<li><a href="https://convertio.co/zh/" class="link-3" target="_blank" rel="nofollow">格式转换</a>
-						</li>
-						<li><a href="http://www.hiwenku.com/" class="link-3" target="_blank" rel="nofollow">文档下载</a>
-						</li>
-						<li><a href="https://weibomiaopai.com/" class="link-3" target="_blank" rel="nofollow">视频下载</a>
-						</li>
-						<li><a href="https://www.eggvod.cn/music/" class="link-3" target="_blank" rel="nofollow">音乐下载</a>
-						</li>
-					</ul>
-				</div>
-				<div class="jj-list">
-					<div class="jj-list-tit">搜索 · 资源</div>
-					<ul class="jj-list-con">
-						<li><a href="https://www.cupfox.com/" class="link-3" target="_blank" rel="nofollow">茶杯狐</a></li>
-						<li><a href="https://www.dy2018.com/" class="link-3" target="_blank" rel="nofollow">电影天堂</a></li>
-						<li><a href="https://www.coolist.net/" class="link-3" target="_blank" rel="nofollow">酷软清单</a>
-						</li>
-						<li><a href="https://minapp.com/" class="link-3" target="_blank" rel="nofollow">知晓程序</a></li>
-						<li><a href="https://zhengbanxianmian.com/" class="link-3" target="_blank"
-								rel="nofollow">软件限免</a></li>
-						<li><a href="https://www.soukuzhan.com/" class="link-3" target="_blank"
-								rel="nofollow">搜酷站</a></li>
-						<li><a href="https://www.jiumodiary.com/" class="link-3" target="_blank" rel="nofollow">电子书</a>
-						</li>
-						<li><a href="https://pan.appts.cn/" class="link-3" target="_blank" rel="nofollow">常用软件</a>
-						</li>
-						<li><a href="http://www.zimuku.la/" class="link-3" target="_blank" rel="nofollow">字幕库</a></li>
-					</ul>
-				</div>
-			</div>
-			<!-- 内容end -->
+        </ul>
+        <div class="content">
+            <div class="item" style="display: block;">
+                <table>
+                    <tr>
 
-			<!-- 底部版权start -->
-			<!-- 开源不易，请保留下方本项目开源地址 -->
-			<!-- 如果您不愿意保留下方本项目开源地址，请打赏并留言您的网址 >> https://afdian.net/@appts -->
+                        <td><a href="https://www.baidu.com/" target="_blank">百度</a></td>
+                        <td><a href="https://www.google.com/" target="_blank">谷歌</a></td>
+                        <td><a href="https://cn.bing.com/" target="_blank">必应</a></td>
+                        <td><a href="https://tieba.baidu.com/" target="_blank">贴吧</a></td>
+                        <td><a href="https://www.zhihu.com/" target="_blank">知乎</a></td>
+                        <td><a href="https://www.douban.com/" target="_blank">豆瓣</a></td>
+                        <td><a href="https://www.pexels.com/" target="_blank">PEXELS</a></td>
 
-			<div class="footer1">Copyright © 2021
-				<a href="https://www.appts.cn/" style="color:#ffffff;" target="_blank" rel="nofollow">软件探索 </a>
-				<!-- 请保留下方开源地址-->
-				<a href="https://github.com/appexplore/jianavi" style="color:#ffffff;" target="_blank"
-					rel="nofollow">开源 </a>
-			</div>
-		</div>
+                    </tr>
+                    <tr>
+                        <td><a href="https://www.weibo.com/" target="_blank">微博</a></td>
+                        <td><a href="https://www.taobao.com/" target="_blank">淘宝</a></td>
+                        <td><a href="https://www.jd.com/" target="_blank">京东</a></td>
+                        <td><a href="https://www.amazon.cn/" target="_blank">亚马逊</a></td>
+                        <td><a href="https://www.suning.com/" target="_blank">苏宁易购</a></td>
+                        <td><a href="https://you.163.com/" target="_blank">网易严选</a></td>
+                        <td><a href="https://www.mi.com/" target="_blank">小米商城</a></td>
+                        </tr>
+                    <td><a href="https://www.youku.com/" target="_blank">优酷</a></td>
+                    <td><a href="https://www.iqiyi.com/" target="_blank">爱奇艺</a></td>
+                    <td><a href="https://v.qq.com/" target="_blank">腾讯视频</a></td>
+                    <td><a href="https://www.bitdbitd.com/" target="_blank">哔哩哔哩</a></td>
+                    <td><a href="http://tv.cctv.com/" target="_blank">央视网</a></td>
+                    <td><a href="https://www.douyu.com/" target="_blank">斗鱼直播</a></td>
+                    <td><a href="https://www.smzdm.com/" target="_blank">什么值得买</a></td></tr>
+                    <tr>
+                        <td><a href="https://music.163.com/" target="_blank">网易云音乐</a></td>
+                        <td><a href="https://www.xiami.com/" target="_blank">虾米音乐</a></td>
+                        <td><a href="https://y.qq.com/" target="_blank">QQ音乐</a></td>
+                        <td><a href="https://douban.fm/" target="_blank">豆瓣FM</a></td>
+                        <td><a href="https://www.ximalaya.com/" target="_blank">喜马拉雅FM</a></td>
+                        <td><a href="http://sports.qq.com/" target="_blank">腾讯体育</a></td>
+                        <td><a href="https://www.miguvideo.com/mgs/website/prd/sportsHomePage.html?from=001" target="_blank">咪咕体育</a> </td>
 
-			<div class="footer">Copyright © 2021
-				<a href="https://www.appts.cn/" style="color:#ffffff;" target="_blank" rel="nofollow">软件探索 </a>
-				<!-- 请保留下方开源地址-->
-				<a href="https://github.com/appexplore/jianavi" style="color:#ffffff;" target="_blank"
-					rel="nofollow">开源 </a>
-			</div>
-			<!-- 底部版权end -->
-	</div>
+                    </tr>
+                </table>
+            </div>
+            <div class="item">
+<table>
+    <tr>
+        <td><a href="https://store.steampowered.com/" target="_blank">Steam</a></td>
+        <td><a href="http://www.gamersky.com/" target="_blank">游民星空</a></td>
+        <td><a href="http://www.tgbus.com/" target="_blank">口袋巴士</a></td>
+        <td><a href="https://www.17173.com/" target="_blank">17173</a></td>
+        <td><a href="http://www.duowan.com/" target="_blank">多玩游戏</a></td>
+        <td><a href="https://www.3dmgame.com/" target="_blank">3DMGAME</a></td>
+        <td><a href="http://www.66rpg.com/" target="_blank">橙光游戏</a></td>
+    </tr>
+    <tr>
+        <td><a href="https://www.behance.net/" target="_blank">Behance</a></td>
+        <td><a href="https://dribbble.com/" target="_blank">Dribbble</a></td>
+        <td><a href="https://muz.li/" target="_blank">Muzli</a></td>
+        <td><a href="https://www.mydesy.com/" target="_blank">MyDesy</a></td>
+        <td><a href="http://www.zcool.com.cn/" target="_blank">ZCOOL</a></td>
+        <td><a href="https://thefwa.com/" target="_blank">FWA</a></td>
+        <td><a href="https://land-book.com/" target="_blank">LandBook</a></td>
+    </tr><tr>
+    <td><a href="http://huabanpro.com/" target="_blank">Huaban</a></td>
+    <td><a href="https://unsplash.com/" target="_blank">Unsplash</a></td>
+    <td><a href="https://pixabay.com/" target="_blank">Pixabay</a></td>
+    <td><a href="https://500px.com/" target="_blank">500px</a></td>
+    <td><a href="https://www.pinterest.com/" target="_blank">Pinterest</a></td>
 
-	<!-- 注意！为了优化演示站访问速度下方两行引用的是CDN上的js文件地址，请修改为自己的样式文件地址 -->
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/appexplore/jianavi/js/jquery.min.js"></script>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/appexplore/jianavi/js/js.min.js"></script>
+    <td><a href="https://www.splitshire.com/" target="_blank">SplitShire</a></td>
+</tr><tr>
+    <td><a href="http://www.nipic.com/" target="_blank">NiPic</a></td>
+    <td><a href="http://www.58pic.com/" target="_blank">58Pic</a></td>
+    <td><a href="https://www.freepik.com/" target="_blank">freepik</a></td>
+    <td><a href="http://www.uikit.me/" target="_blank">UIKit</a></td>
+    <td><a href="https://www.pixeden.com/" target="_blank">Pixeden</a></td>
+    <td><a href="http://subtlepatterns.com/" target="_blank">Subtlepatterns</a></td>
+    <td><a href="http://www.fribbble.com/" target="_blank">Fribbble</a></td>
+</tr><tr>
+    <td><a href="https://fontsup.com/" target="_blank">Fontsup</a></td>
+    <td><a href="https://www.dafont.com/" target="_blank">dafont</a></td>
+    <td><a href="http://www.qiuziti.com/" target="_blank">Qiuziti</a></td>
+    <td><a href="https://www.myfonts.com/" target="_blank">MyFonts</a></td>
+    <td><a href="https://zh.fonts2u.com/" target="_blank">Fonts2u</a></td>
+    <td><a href="http://www.fontfabric.com/" target="_blank">Fontfabric</a></td>
+    <td><a href="https://www.urbanfonts.com/" target="_blank">UrbanFonts</a></td>
+</tr><tr>
+    <td><a href="http://www.ui.cn/" target="_blank">UICN</a></td>
+    <td><a href="https://sitesee.co/" target="_blank">SiteSee</a></td>
+    <td><a href="https://uigarage.net/" target="_blank">UIGarage</a></td>
+    <td><a href="https://bestwebsite.gallery/" target="_blank">BestWebsite</a></td>
+    <td><a href="http://collectui.com/" target="_blank">CollectUI</a></td>
+    <td><a href="https://uimovement.com/" target="_blank">UIMovement</a></td>
+    <td><a href="https://reeoo.com/" target="_blank">Reeoo</a></td>
+</tr><tr>
+    <td><a href="https://colorhunt.co/" target="_blank">ColorHunt</a></td>
+    <td><a href="https://coolors.co/" target="_blank">Coolors</a></td>
+    <td><a href="https://color.adobe.com/zh/" target="_blank">AdobeColor</a></td>
+    <td><a href="https://webgradients.com/" target="_blank">WebGradients</a></td>
+    <td><a href="https://trianglify.io/" target="_blank">Trianglify</a></td>
+    <td><a href="http://www.colorfavs.com/" target="_blank">ColorFavs</a></td>
+    <td><a href="http://colllor.com/" target="_blank">Colllor</a></td>
+</tr><tr>
+    <td><a href="https://www.fotor.com.cn/" target="_blank">Fotor</a></td>
+    <td><a href="https://www.photopea.com/" target="_blank">Photopea</a></td>
+    <td><a href="https://www.autodraw.com/" target="_blank">AutoDraw</a></td>
+    <td><a href="https://www.figma.com/" target="_blank">Figma</a></td>
+    <td><a href="http://editor.method.ac/" target="_blank">SVG Draw</a></td>
+    <td><a href="https://cloudconvert.com/" target="_blank">CloudConvert</a></td>
+    <td><a href="https://tinypng.com/" target="_blank">TinyPNG</a></td>
+</tr><tr>
+    <td><a href="https://developer.apple.com/design/" target="_blank">Apple</a></td>
+    <td><a href="https://design.google/" target="_blank">Google</a></td>
+    <td><a href="https://www.microsoft.com/design/" target="_blank">Microsoft</a></td>
+    <td><a href="https://material.io/" target="_blank">Material</a></td>
+    <td><a href="https://developer.android.google.cn/design/" target="_blank">Android</a></td>
+    <td><a href="http://screensiz.es/phone" target="_blank">ScreenSize</a></td>
+    <td><a href="https://weui.io/" target="_blank">WeUI</a></td>
+</tr>
+
+</table>
+            </div>
+            <div class="item">
+<table>
+    <tr>
+        <td><a href="http://edu.qq.com/" target="_blank">腾讯教育</a></td>
+        <td><a href="http://learning.sohu.com/" target="_blank">搜狐教育</a></td>
+        <td><a href="http://www.163.com/" target="_blank">新浪教育</a></td>
+        <td><a href="http://www.eol.cn/" target="_blank">中国教育在线</a></td>
+        <td><a href="http://www.xdf.cn/" target="_blank">新东方</a></td>
+        <td><a href="http://www.hjenglish.com/" target="_blank">沪江英语</a></td>
+        <td><a href="https://www.51test.net/" target="_blank">无忧考网</a></td>
+    </tr><tr>
+    <td><a href="http://www.51mokao.com/" target="_blank">我要模考</a></td>
+    <td><a href="http://www.kmf.com/" target="_blank">考满分留学</a></td>
+    <td><a href="https://leetcode-cn.com/" target="_blank">LeetCode</a></td>
+    <td><a href="http://www.chinaacc.com/tiku/" target="_blank">中华会计网校</a></td>
+    <td><a href="https://www.typing.com/student" target="_blank">打字练习</a></td>
+    <td><a href="http://www.jxedt.com/" target="_blank">驾校一点通</a></td>
+    <td><a href="http://www.jiakaobaodian.com/" target="_blank">驾考宝典</a></td>
+</tr><tr>
+    <td><a href="http://www.duolingo.cn/" target="_blank">多邻国</a></td>
+    <td><a href="https://www.shanbay.com/" target="_blank">扇贝</a></td>
+    <td><a href="http://www.baicizhan.com/" target="_blank">百词斩</a></td>
+    <td><a href="http://www.51voa.com/" target="_blank">51VOA</a></td>
+    <td><a href="https://smallpdf.com/cn" target="_blank">在线PDF</a></td>
+    <td><a href="http://webdemo.myscript.com/" target="_blank">公式字符</a></td>
+    <td><a href="https://www.wolframalpha.com/" target="_blank">Wolfram Alpha</a></td>
+</tr><tr>
+    <td><a href="https://www.chsi.com.cn/cet/" target="_blank">英语四六级</a></td>
+    <td><a href="http://hainan.cltt.org/web/login/pscp01001.aspx" target="_blank">普通话水平</a></td>
+    <td><a href="http://60.208.116.167:81/pas/querycert.jsp" target="_blank">会计从业资格</a></td>
+    <td><a href="http://ntce.neea.edu.cn/html1/folder/1508/211-1.htm?sid=660" target="_blank">教师资格</a></td>
+    <td><a href="http://zscx.neea.edu.cn/html1/folder/1508/211-1.htm?sid=300" target="_blank">计算机等级</a></td>
+    <td><a href="http://ielts.etest.edu.cn/" target="_blank">雅思</a></td>
+    <td><a href="https://toefl.neea.cn/" target="_blank">托福</a></td>
+</tr>
+</table>
+            </div>
+            <div class="item">
+<table>
+    <tr>
+        <td><a href="https://www.v2ex.com/" target="_blank">V2EX</a></td>
+        <td><a href="https://juejin.im/" target="_blank">掘金</a></td>
+        <td><a href="https://www.oschina.net/" target="_blank">开源中国</a></td>
+        <td><a href="https://www.csdn.net/" target="_blank">CSDN</a></td>
+        <td><a href="http://www.infoq.com/cn/" target="_blank">InfoQ</a></td>
+        <td><a href="http://next.36kr.com/" target="_blank">NEXT</a></td>
+        <td><a href="https://news.ycombinator.com/" target="_blank">HackerNews</a></td>
+    </tr><tr>
+    <td><a href="http://www.dgtle.com/" target="_blank">数字尾巴</a></td>
+    <td><a href="https://www.ifanr.com/" target="_blank">爱范儿</a></td>
+    <td><a href="https://www.leiphone.com/" target="_blank">雷锋网</a></td>
+    <td><a href="http://www.geekpark.net/" target="_blank">极客公园</a></td>
+    <td><a href="http://www.chinabyte.com/" target="_blank">比特网</a></td>
+    <td><a href="http://www.zealer.com/" target="_blank">ZEALER</a></td>
+    <td><a href="https://chinese.engadget.com/" target="_blank">Engadget</a></td>
+</tr><tr>
+    <td><a href="https://github.com/" target="_blank">GitHub</a></td>
+    <td><a href="https://coding.net/" target="_blank">Coding</a></td>
+    <td><a href="https://shimo.im/" target="_blank">石墨</a></td>
+    <td><a href="http://naotu.baidu.com/" target="_blank">百度脑图</a></td>
+    <td><a href="https://www.zybuluo.com/mdeditor" target="_blank">CmdMarkdown</a></td>
+    <td><a href="https://tinypng.com/" target="_blank">TinyPNG</a></td>
+    <td><a href="https://sm.ms/" target="_blank">SM.MS 图床</a></td>
+</tr><tr>
+    <td><a href="https://www.ipip.net/ip.html" target="_blank">IP查询</a></td>
+    <td><a href="http://www.speedtest.net/" target="_blank">Speedtest</a></td>
+    <td><a href="https://www.17ce.com/" target="_blank">17CE</a></td>
+    <td><a href="https://tool.lu/" target="_blank">在线工具</a></td>
+    <td><a href="https://www.freeformatter.com/" target="_blank">代码格式化</a></td>
+    <td><a href="https://www.moakt.com/" target="_blank">临时邮箱</a></td>
+    <td><a href="https://www.domcomp.com/" target="_blank">域名比价</a></td>
+</tr><tr>
+    <td><a href="https://docs.microsoft.com/zh-cn/" target="_blank">Microsoft文档</a></td>
+    <td><a href="https://developers.google.com/china/" target="_blank">Google开发者</a></td>
+    <td><a href="https://developer.mozilla.org/zh-CN/" target="_blank">MDN文档</a></td>
+    <td><a href="http://www.w3school.com.cn/" target="_blank">W3school</a></td>
+    <td><a href="http://www.runoob.com/" target="_blank">菜鸟教程</a></td>
+    <td><a href="http://man.linuxde.net/" target="_blank">Linux命令</a></td>
+    <td><a href="https://mp.weixin.qq.com/debug/wxadoc/dev/index.html" target="_blank">微信小程序</a></td>
+</tr><tr>
+    <td><a href="http://www.aliued.cn/" target="_blank">阿里UED</a></td>
+    <td><a href="https://tech.youzan.com/" target="_blank">有赞技术</a></td>
+    <td><a href="http://jdc.jd.com/" target="_blank">京东JDC</a></td>
+    <td><a href="http://www.alloyteam.com/" target="_blank">腾讯全端</a></td>
+    <td><a href="http://ued.baidu.com/" target="_blank">百度UED</a></td>
+    <td><a href="https://fed.renren.com/" target="_blank">人人网FED</a></td>
+    <td><a href="http://www.ruanyifeng.com/" target="_blank">阮一峰博客</a></td>
+</tr><tr>
+    <td><a href="https://sspai.com/" target="_blank">少数派</a></td>
+    <td><a href="https://www.lizhi.io/" target="_blank">数码荔枝</a></td>
+    <td><a href="https://www.iplaysoft.com/" target="_blank">异次元</a></td>
+    <td><a href="https://en.softonic.com/" target="_blank">Softonic</a></td>
+    <td><a href="http://macdownload.informer.com/" target="_blank">MacInformer</a></td>
+    <td><a href="http://down.chinaz.com/" target="_blank">站长下载</a></td>
+    <td><a href="http://mirrors.ustc.edu.cn/" target="_blank">中科大镜像</a></td>
+</tr><tr>
+    <td><a href="https://www.aliyun.com/" target="_blank">阿里云</a></td>
+    <td><a href="https://cloud.tencent.com/" target="_blank">腾讯云</a></td>
+    <td><a href="https://aws.amazon.com/cn/" target="_blank">AWS</a></td>
+    <td><a href="https://cloud.google.com/" target="_blank">GoogleCloud</a></td>
+    <td><a href="https://www.linode.com/" target="_blank">Linode</a></td>
+    <td><a href="https://www.digitalocean.com/" target="_blank">DigitalOcean</a></td>
+    <td><a href="https://bandwagonhost.com/" target="_blank">Bandwagon</a></td>
+</tr>
+</table>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        var lis = document.querySelector('.lists').querySelectorAll('li')
+        var item = document.querySelector('.content').querySelectorAll('.item')
+        for (let i = 0;i < lis.length;i++){
+            lis[i].onclick = function(){
+                for (let i = 0;i < lis.length; i++){
+                    lis[i].removeAttribute('class','active')
+                }
+               this.className = 'active'
+
+                lis[i].setAttribute('index',i)
+                var index = lis[i].getAttribute('index') 
+                for (let i = 0; i < item.length; i++){
+                    for (let i = 0; i < item.length; i++){
+                        item[i].style.display = 'none'
+                    }
+                    item[index].style.display = 'block'
+                }
+            }
+            
+        }
+        
+    </script>
+    <script>
+        var search = document.getElementById("search");
+        var formbox = document.getElementById('from_box');
+        var forms = formbox.getElementsByTagName("form");
+        var ul = search.getElementsByTagName("ul")[0];
+        var li = ul.getElementsByTagName("li");
+        var length = li.length;
+        li[0].onclick = function() {
+            for(var i = 1; i < length; i++) {
+                li[i].style.display = "block";
+            }
+        }
+        var n = 0; //第一个显示表单的位置
+        for(var i = 1; i < length; i++) {
+            li[i].onclick = function(a) {
+                return function() {
+                    //交换显示的html内容
+                    var temp = li[0].innerHTML;
+                    li[0].innerHTML = this.innerHTML;
+                    this.innerHTML = temp;
+                    for(var j = 1; j < length; j++) {
+                        li[j].style.display ="none";
+                    }
+                    //交换表单的显示
+                    //alert(li[0].innerHTML.substring(37,7));
+                    //alert(li[0].innerHTML.indexOf('baidu'));
+                    hidden_from(); //隐藏表单
+                    if(li[0].innerHTML.indexOf('baidu') > 0) {
+                        document.getElementById('from_baidu').style.display = 'block';
+                    } else if(li[0].innerHTML.indexOf('google') > 0) {
+                        document.getElementById('from_google').style.display = 'block';
+                    } else if(li[0].innerHTML.indexOf('so') > 0) {
+                        document.getElementById('from_so').style.display = 'block';
+                    }
+                    //alert(this.innerHTML);
+                    //forms[n].style.display = "none";
+                    //forms[a].style.display = "block";
+                    //n = a;
+                }
+            }(i);
+            li[i].onmouseover = function() {
+                this.style.border ="#7fb80e 1px solid";
+                this.style.background ="#f2eada";
+            }
+            li[i].onmouseout = function() {
+                this.style.border = "0px";
+                this.style.background = "inherit";
+            }
+        }
+        //隐藏搜索框表单的函数
+        function hidden_from() {
+            for(var j = 0; j < forms.length; j++) {
+                forms[j].style.display = "none";
+            }
+        }
+    </script>
 </body>
-
 </html>
