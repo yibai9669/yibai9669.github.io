@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的网站收藏</title>
+    <!-- 引入Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- 引入字体图标 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0071e3;
+            --secondary-color: #147ce5;
+            --accent-color: #fa5252;
+            --text-color: #1d1d1f;
+            --light-color: #fbfbfd;
+            --dark-color: #000000;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.5;
+            color: var(--text-color);
+            background-color: var(--light-color);
+            padding-bottom: 2rem;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        header {
+            background-color: rgba(34, 78, 152, 0.8);
+            color: white;
+            padding: 1.2rem 0;
+            margin-bottom: 3rem;
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.01em;
+        }
+
+        .logo i, .logo svg {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .logo svg {
+            width: 32px;
+            height: 32px;
+            vertical-align: middle;
+        }
+
+        .search-box {
+            display: flex;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            border: none;
+            border-radius: 8px 0 0 8px;
+            font-size: 0.95rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-box button {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 0 1.2rem;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-box button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-filter {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background-color: rgba(0, 0, 0, 0.04);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 980px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .view-btn {
+            background-color: rgba(0, 0, 0, 0.04);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn:hover, .view-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
+        }
+
+        .websites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .websites-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .website-card {
+            background-color: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .website-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .website-card .card-header {
+            padding: 1.5rem 1.5rem 1rem;
+            border-bottom: none;
+        }
+
+        .website-card .card-body {
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .website-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .website-card a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .website-card a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .website-card a:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--secondary-color);
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out;
+        }
+        
+        .website-card a:hover:after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        .website-card p {
+            color: #86868b;
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .website-card .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .website-card .tag {
+            background-color: #f5f5f7;
+            padding: 0.3rem 0.8rem;
+            border-radius: 980px;
+            font-size: 0.75rem;
+            color: #1d1d1f;
+            font-weight: 500;
+        }
+
+        .website-list-item {
+            background-color: white;
+            border-radius: 18px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            margin-bottom: 1rem;
+        }
+
+        .website-list-item:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .website-list-item .website-info {
+            flex: 1;
+        }
+
+        .website-list-item h3 {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .website-list-item .website-link {
+            margin-left: 1rem;
+        }
+
+        .website-list-item .website-link a {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 980px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .website-list-item .website-link a:hover {
+            background-color: var(--secondary-color);
+            box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background-color: white;
+            border-radius: 18px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 0.5rem;
+            color: #666;
+        }
+
+        .empty-state p {
+            color: #999;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem 0;
+            color: #86868b;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .websites-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <div class="container">
+                <div class="logo">
+                    <svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#0071e3" />
+                                <stop offset="100%" stop-color="#00c6fb" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M512 128C300.8 128 128 300.8 128 512s172.8 384 384 384 384-172.8 384-384S723.2 128 512 128z" fill="#FFFFFF" />
+                        <path d="M512 192c-176 0-320 144-320 320s144 320 320 320 320-144 320-320-144-320-320-320z" fill="url(#gradient)" />
+                        <path d="M512 320c-106.4 0-192 85.6-192 192s85.6 192 192 192 192-85.6 192-192-85.6-192-192-192z" fill="#FFFFFF" />
+                        <path d="M512 384c-70.4 0-128 57.6-128 128s57.6 128 128 128 128-57.6 128-128-57.6-128-128-128z" fill="url(#gradient)" />
+                    </svg>
+                    <span>网站收藏</span>
+                </div>
+                <div class="search-box">
+                    <input type="text" v-model="searchQuery" placeholder="搜索网站..." @input="filterWebsites">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="controls">
+                <div class="category-filter">
+                    <button class="category-btn" :class="{active: selectedCategory === ''}" @click="selectCategory('')">全部</button>
+                    <button v-for="category in categories" :key="category" 
+                            class="category-btn" :class="{active: selectedCategory === category}"
+                            @click="selectCategory(category)">
+                        {{ category }}
+                    </button>
+                </div>
+                <div class="view-toggle">
+                    <button class="view-btn" :class="{active: viewMode === 'grid'}" @click="viewMode = 'grid'">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button class="view-btn" :class="{active: viewMode === 'list'}" @click="viewMode = 'list'">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div v-if="filteredWebsites.length > 0">
+                <!-- 网格视图 -->
+                <div v-if="viewMode === 'grid'" class="websites-grid">
+                    <div v-for="website in filteredWebsites" :key="website.id" class="website-card">
+                        <div class="card-header">
+                            <h3>
+                                <a :href="website.url" target="_blank">{{ website.name }}</a>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <p>{{ website.description }}</p>
+                            <div class="tags">
+                                <span class="tag">{{ website.category }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 列表视图 -->
+                <div v-else class="websites-list">
+                    <div v-for="website in filteredWebsites" :key="website.id" class="website-list-item">
+                        <div class="website-info">
+                            <h3>{{ website.name }}</h3>
+                            <p>{{ website.description }}</p>
+                        </div>
+                        <div class="website-link">
+                            <a :href="website.url" target="_blank">
+                                <i class="fas fa-external-link-alt"></i> 访问
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 空状态 -->
+            <div v-else class="empty-state">
+                <i class="fas fa-search"></i>
+                <h3>未找到匹配的网站</h3>
+                <p>请尝试使用不同的搜索词或筛选条件</p>
+            </div>
+        </div>
+
+        <footer>
+            <div class="container">
+                <p>&copy; {{ new Date().getFullYear() }} 5我的网站收藏. 保留所有权利.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                searchQuery: '',
+                selectedCategory: '',
+                viewMode: 'grid',
+                websites: [
+                    {
+                        id: 1,
+                        name: '夸夸分享站',
+                        url: 'https://quark4k.com/',
+                        description: '本网站为您提供夸克网盘资源的免费分享服务，可以分享影视剧资源，电视剧，电影，游戏，软件等。',
+                        category: '影视媒体'
+                    },
+                    {
+                        id: 2,
+                        name: '奇乐搜',
+                        url: 'https://www.qileso.com/',
+                        description: '阿里云盘、夸克网盘综合搜索网站，提供全网资源的免费下载。',
+                        category: '影视媒体'
+                    },
+                    {
+                        id: 3,
+                        name: 'Stack Overflow',
+                        url: 'https://stackoverflow.com',
+                        description: '全球最大的程序员问答社区，几乎所有编程问题都能在这里找到答案。',
+                        category: '技术社区'
+                    },
+                    {
+                        id: 4,
+                        name: '知乎',
+                        url: 'https://www.zhihu.com',
+                        description: '中文互联网高质量的问答社区和创作者聚集的原创内容平台。',
+                        category: '社交媒体'
+                    },
+                    {
+                        id: 5,
+                        name: 'MDN Web Docs',
+                        url: 'https://developer.mozilla.org',
+                        description: 'Mozilla开发者网络提供的Web技术权威文档，包括HTML、CSS和JavaScript等。',
+                        category: '学习资源'
+                    },
+                    {
+                        id: 6,
+                        name: 'Bilibili',
+                        url: 'https://www.bilibili.com',
+                        description: '国内知名的视频弹幕网站，提供高质量的动画、游戏、科技等内容。',
+                        category: '视频平台'
+                    },
+                    {
+                        id: 7,
+                        name: 'Vue.js',
+                        url: 'https://vuejs.org',
+                        description: '渐进式JavaScript框架，用于构建用户界面，易学易用，性能出色。',
+                        category: '开发工具'
+                    },
+                    {
+                        id: 8,
+                        name: 'React',
+                        url: 'https://reactjs.org',
+                        description: 'Facebook开发的JavaScript库，用于构建用户界面，特别是单页应用。',
+                        category: '开发工具'
+                    },
+                    {
+                        id: 9,
+                        name: '豆瓣',
+                        url: 'https://www.douban.com',
+                        description: '提供图书、电影、音乐唱片的推荐、评论和价格比较，以及城市独特的文化生活。',
+                        category: '社交媒体'
+                    },
+                    {
+                        id: 10,
+                        name: 'Coursera',
+                        url: 'https://www.coursera.org',
+                        description: '提供来自世界顶尖大学和机构的在线课程，涵盖各个学科领域。',
+                        category: '学习资源'
+                    },
+                    {
+                        id: 11,
+                        name: 'YouTube',
+                        url: 'https://www.youtube.com',
+                        description: '全球最大的视频分享平台，提供海量视频内容，包括教程、娱乐、音乐等。',
+                        category: '视频平台'
+                    },
+                    {
+                        id: 12,
+                        name: 'CSS-Tricks',
+                        url: 'https://css-tricks.com',
+                        description: '提供丰富的CSS技巧和教程，帮助开发者掌握前端设计技能。',
+                        category: '学习资源'
+                    },
+                    {
+                        id: 13,
+                        name: 'CSS-Tricks',
+                        url: 'https://css-tricks.com',
+                        description: '提供丰富的CSS技巧和教程，帮助开发者掌握前端设计技能。',
+                        category: 'Bao百度'
+                    }
+                ],
+                filteredWebsites: []
+            },
+            computed: {
+                categories() {
+                    // 获取所有不重复的分类
+                    return [...new Set(this.websites.map(website => website.category))];
+                }
+            },
+            methods: {
+                filterWebsites() {
+                    const query = this.searchQuery.toLowerCase();
+                    this.filteredWebsites = this.websites.filter(website => {
+                        const matchesSearch = website.name.toLowerCase().includes(query) || 
+                                            website.description.toLowerCase().includes(query);
+                        const matchesCategory = this.selectedCategory === '' || website.category === this.selectedCategory;
+                        return matchesSearch && matchesCategory;
+                    });
+                },
+                selectCategory(category) {
+                    this.selectedCategory = category;
+                    this.filterWebsites();
+                }
+            },
+            created() {
+                // 初始化显示所有网站
+                this.filteredWebsites = [...this.websites];
+            }
+        });
+    </script>
+</body>
+</html>
